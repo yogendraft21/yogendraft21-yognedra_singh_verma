@@ -19,17 +19,12 @@ const ImageDisplay = () => {
     setImageUrl(imageUrl);
   };
 
-  const shareUrl = window.location.href;
-  const title = 'Check out this random image!';
+  
 
   useEffect(() => {
     if (imageUrl) {
-      const metaTags = document.getElementsByTagName('meta');
-      for (let i = 0; i < metaTags.length; i++) {
-        if (metaTags[i].getAttribute('property') === 'og:image') {
-          metaTags[i].setAttribute('content', imageUrl);
-        }
-      }
+      const helmet = Helmet.peek();
+      helmet.metaTags.push({ property: 'og:image', content: imageUrl });
     }
   }, [imageUrl]);
 
@@ -38,23 +33,20 @@ const ImageDisplay = () => {
       <Helmet>
         <meta property="og:title" content="Random Image App" />
         <meta property="og:description" content="Check out this random image!" />
-        {imageUrl && <meta property="og:image" content={imageUrl} />}
-        <meta property="og:url" content={shareUrl} />
-        <meta property="og:type" content="website" />
       </Helmet>
       {imageUrl && (
         <div>
           <img src={imageUrl} alt="Random" />
           <div className="share-buttons">
-            <FacebookShareButton quote={title} url={shareUrl}>
+            <FacebookShareButton url={imageUrl}>
               <FontAwesomeIcon icon={faFacebookF} />
               <span>Share on Facebook</span>
             </FacebookShareButton>
-            <TwitterShareButton title={title} url={shareUrl}>
+            <TwitterShareButton url={imageUrl}>
               <FontAwesomeIcon icon={faTwitter} />
               <span>Share on Twitter</span>
             </TwitterShareButton>
-            <WhatsappShareButton title={title} url={shareUrl}>
+            <WhatsappShareButton url={imageUrl}>
               <FontAwesomeIcon icon={faWhatsapp} />
               <span>Share on WhatsApp</span>
             </WhatsappShareButton>
